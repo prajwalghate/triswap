@@ -49,7 +49,7 @@ function App() {
 				setIsConnected(false);
 			}
 		} else {
-			alert("Please connect to Matic Mumbai Testnet");
+			alert("Please connect to Ethereum Goerli Testnet");
 		}
 	};
 
@@ -69,6 +69,7 @@ function App() {
 	const submitFunction = async () => {
 		console.log("submit function called", number * 10 ** decimals);
 		// setNumber(0);
+		setLoading(true);
 
 		if (typeof window.ethereum !== "undefined") {
 			const signer = provider.getSigner();
@@ -133,41 +134,67 @@ function App() {
 					<div className="App-header">
 						{isConnected ? (
 							<>
-								<div className="card">
-									<div className="card-row">
-										<h3>Enter USDC</h3>
-										<input
-											className="inputcss"
-											style={{ width: "70%", borderRadius: 10 }}
-											value={number}
-											onChange={(e) => {
-												setNumber(e.target.value);
+								{loading ? (
+									<>
+										<div
+											style={{
+												display: "flex",
+												flexDirection: "column",
+												alignItems: "center",
+												justifyContent: "center",
 											}}
-											type="number"
-										/>
-									</div>
-									<div className="card-row">
-										<h3>Select Token To Swap</h3>
-										<Dropdown
-											className="dropdowncss"
-											options={options}
-											onChange={(change) => {
-												setSelectedToken(change.value);
+										>
+											<p className="loader">Minting Transaction</p>
+											<Circles
+												height="80"
+												width="80"
+												color="#4fa94d"
+												ariaLabel="circles-loading"
+												wrapperStyle={{}}
+												wrapperClass=""
+												visible={true}
+											/>
+										</div>
+									</>
+								) : (
+									<>
+										<div className="card">
+											<div className="card-row">
+												<h3>Enter USDC</h3>
+												<input
+													className="inputcss"
+													style={{ width: "70%", borderRadius: 10 }}
+													value={number}
+													onChange={(e) => {
+														setNumber(e.target.value);
+													}}
+													type="number"
+												/>
+											</div>
+											<div className="card-row">
+												<h3>Select Token To Swap</h3>
+												<Dropdown
+													className="dropdowncss"
+													options={options}
+													onChange={(change) => {
+														setSelectedToken(change.value);
+													}}
+													value={seletedToken}
+													placeholder="Select an option"
+												/>
+											</div>
+										</div>
+										<button
+											style={{ marginTop: 20 }}
+											className="btn"
+											onClick={() => {
+												approve();
 											}}
-											value={seletedToken}
-											placeholder="Select an option"
-										/>
-									</div>
-								</div>
-								<button
-									style={{ marginTop: 20 }}
-									className="btn"
-									onClick={() => {
-										approve();
-									}}
-								>
-									Exchange
-								</button>
+										>
+											Exchange
+										</button>
+									</>
+								)}
 							</>
 						) : (
 							<div style={{ margin: 20 }} className="loader">
